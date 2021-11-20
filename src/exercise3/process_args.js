@@ -1,7 +1,7 @@
 const {
-    ARGUMENT_PREFIX,
     DEFAULT_VALUES,
     PARAMETERS,
+    PREFIX
 } = require('./constants.js');
 
 // Set parameters to an object with the input data
@@ -9,10 +9,10 @@ function processArgs() {
     var d='', t=[], n='', p='';
     // Discard 2 first arguments because they are paths
     // Set parameters to uppercase, keep the values as they are in the input
-    var args = process.argv.slice(2).map(argument => (argument[0] === ARGUMENT_PREFIX) ? argument.toUpperCase() : argument);
+    var args = process.argv.slice(2).map(argument => (argument[0] === PREFIX.ARGUMENT) ? argument.toUpperCase() : argument);
     
     args.forEach((argument, index) => {
-        const isOption = argument[0] === ARGUMENT_PREFIX;
+        const isOption = argument[0] === PREFIX.ARGUMENT;
 
         if (isOption) {
             const next = args[index+1];

@@ -19,7 +19,11 @@ const PARAMETERS = {
     'NUMBER_TOP': '-N',
     'PERIOD': '-P'
 };
-const ARGUMENT_PREFIX = '-';
+const PREFIX = {
+    ARGUMENT: '-',
+    TF: 'tf-',
+    TF_IDF: 'tfIdf-'
+}
 const FILE_ENCODING = 'utf8';
 const REGEX_FLAGS = {
     CASE_INSENSITIVE: 'i',
@@ -28,10 +32,10 @@ const REGEX_FLAGS = {
 const SLASH = '/';
 
 module.exports = {
-    ARGUMENT_PREFIX,
     DEFAULT_VALUES,
     FILE_ENCODING,
     PARAMETERS,
+    PREFIX,
     REGEX_FLAGS,
     SEARCH_ONLY_EXACT_WORD,
     SLASH

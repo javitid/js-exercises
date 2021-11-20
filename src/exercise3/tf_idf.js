@@ -2,6 +2,7 @@
 const fs = require('fs');
 const {
     FILE_ENCODING,
+    PREFIX,
     REGEX_FLAGS,
     SEARCH_ONLY_EXACT_WORD,
     SLASH,
@@ -29,7 +30,7 @@ function getTermOccurrenciesFromFiles(directory, terms) {
             // Calculate and sert TF (Term Frequency)
             for (let term of terms) {
                 occurrenciesPerFile.set(term, getOccurreciesInContent(term, data));
-                occurrenciesPerFile.set('tf-' + term, occurrenciesPerFile.get(term)/occurrenciesPerFile.get('totalWords'));
+                occurrenciesPerFile.set(PREFIX.TF + term, occurrenciesPerFile.get(term)/occurrenciesPerFile.get('totalWords'));
             }
 
             occurrencies.set(file, occurrenciesPerFile);
@@ -49,24 +50,31 @@ function getOccurreciesInContent(term, content) {
 }
 
 function calculateTfIdf(occurrencies, terms, numberOfFiles) {
-    // Get number of files with any occurrency of each term
+    const tfIdf = new Map();
+    // Get number of files with some occurrency of each term
     const filesWithTerm = getFilesWithTerm(occurrencies, terms);
-
-    var idf = new Map();
-    // Calculate IDF (Inverse Document Frequency) for each term
-    for (term of terms) {
-        // Tf-idf = idf * tf
-        idf.set(term, Math.log10(numberOfFiles/filesWithTerm[term]));
-    }
 
     for (document of occurrencies.keys()) {
         for (term of terms) {
-            // Tf-idf = idf * tf
-            occurrencies.get(document).set('tfIdf-' + term, idf.get(term)*occurrencies.get(document).get('tf-' + term));
+            // Tf-idf = tf * idf
+            // TF already set in occurrencies
+            // Calculate IDF (Inverse Document Frequency) for each term
+            tfIdf.set(
+                document + PREFIX.ARGUMENT + term,
+                (occurrencies.get(document).get(PREFIX.TF + term) * Math.log10(numberOfFiles/filesWithTerm[term])).toFixed(2)
+            );
         }
     }
 
-    return occurrencies;
+    return tfIdf;
+}
+
+function addTfIdf(occurrencies, tfIdf, terms) {
+    for (document of occurrencies.keys()) {
+        for (term of terms) {
+            occurrencies.get(document).set(PREFIX.TF_IDF + term, tfIdf.get(document + PREFIX.ARGUMENT + term));
+        }
+    }
 }
 
 // Get number of files with occurrencies for each term
@@ -86,7 +94,7 @@ function printResult(occurrencies, terms, numberTop, counter) {
         .map((file) => {
             return {
                 name: file[0],
-                tfIdf: file[1].get('tfIdf-' + term),
+                tfIdf: file[1].get(PREFIX.TF_IDF + term),
             }
         })
         .sort((a, b) => b.tfIdf - a.tfIdf)
@@ -112,7 +120,10 @@ function flow(d, t, n, p) {
     const {numberOfFiles, occurrencies} = getTermOccurrenciesFromFiles(d, t);
 
     // 2. Calculate idf
-    calculateTfIdf(occurrencies, t, numberOfFiles);
+    const tfIdf = calculateTfIdf(occurrencies, t, numberOfFiles);
+
+    // 3. Add TfIdf to occurrencies Map
+    addTfIdf(occurrencies, tfIdf, t);
 
     // 3. Print results
     printResult(occurrencies, t, n, counter*p);
