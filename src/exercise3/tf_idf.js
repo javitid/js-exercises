@@ -6,6 +6,7 @@ const {
     REGEX_FLAGS,
     SEARCH_ONLY_EXACT_WORD,
     SLASH,
+    TOTAL_WORDS
 } = require('./constants.js');
 const {processArgs} = require('./process_args.js');
 
@@ -24,13 +25,13 @@ function getTermOccurrenciesFromFiles(directory, terms) {
             const data = fs.readFileSync(directory + SLASH + file, FILE_ENCODING);
 
             // Set total number of words
-            occurrenciesPerFile.set('totalWords', data.split(' ').length);
+            occurrenciesPerFile.set(TOTAL_WORDS, data.split(' ').length);
 
             // Set occurrencies of each term in the current file
             // Calculate and sert TF (Term Frequency)
             for (let term of terms) {
                 occurrenciesPerFile.set(term, getOccurreciesInContent(term, data));
-                occurrenciesPerFile.set(PREFIX.TF + term, occurrenciesPerFile.get(term)/occurrenciesPerFile.get('totalWords'));
+                occurrenciesPerFile.set(PREFIX.TF + term, occurrenciesPerFile.get(term)/occurrenciesPerFile.get(TOTAL_WORDS));
             }
 
             occurrencies.set(file, occurrenciesPerFile);

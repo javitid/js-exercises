@@ -29,6 +29,7 @@ const REGEX_FLAGS = {
     CASE_INSENSITIVE: 'i',
     GLOBAL: 'g',
 };
+const TOTAL_WORDS = 'totalWords';
 const SLASH = '/';
 
 module.exports = {
@@ -38,5 +39,6 @@ module.exports = {
     PREFIX,
     REGEX_FLAGS,
     SEARCH_ONLY_EXACT_WORD,
-    SLASH
+    SLASH,
+    TOTAL_WORDS
 };
