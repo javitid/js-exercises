@@ -25,10 +25,10 @@ function processArgs(args) {
                     t = next;
                     break;
                 case PARAMETERS.NUMBER_TOP:
-                    n = next;
+                    n = parseInt(next);
                     break;
                 case PARAMETERS.PERIOD:
-                    p = next;
+                    p = parseInt(next);
                     break;
                 default:
                     console.log('Wrong parameter: ' + args[index]);
@@ -42,22 +42,13 @@ function processArgs(args) {
     n = (n === '') ? DEFAULT_VALUES.NUMBERS_TOP : n;
     p = (p === '') ? DEFAULT_VALUES.PERIOD : p;
 
-    // Set n and p as int values
-    n = parseInt(n);
-    p = parseInt(p);
-
     // Validations
-    if (typeof(n) != 'number') {
+    if (isNaN(n)) {
         console.log('Number of top elements "n" should be a number.');
         process.exit();
     }
-    if (typeof(p) != 'number') {
+    if (isNaN(p)) {
         console.log('Period "p" should be a number.');
-        process.exit();
-    }
-    if (t === '') {
-        console.log('Parameter "t" is mandatory. Terms to be analyzed.');
-        console.log('Example of execution: ./td-idf.js -d dir -n 5 -p 1000 -t "term1 term2 ..."');
         process.exit();
     }
 

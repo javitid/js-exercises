@@ -84,12 +84,5 @@ describe('processArgs', () => {
             processArgs(args.split(' '));
             expect(mockExit).toHaveBeenCalled();
         });
-
-        it('when there is no term string', () => {
-            const args = '-d directory -p 1000 -n 3';
-
-            processArgs(args.split(' '));
-            expect(mockExit).toHaveBeenCalled();
-        });
     });
 });
