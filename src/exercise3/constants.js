@@ -1,14 +1,6 @@
-// Enable search for exact words. Ex:
-// (true: "word" doesn't match in "Text of some words")
-
-const { regexLiteral } = require("@babel/types");
-
-// (false: "word" matchs in "Text of some words")
-const SEARCH_ONLY_EXACT_WORD = true;
-
 const DEFAULT_VALUES = {
     DIRECTORY: './',
-    PERIOD: 5000,
+    PERIOD: 1000,
     NUMBERS_TOP: 3,
 };
 
@@ -22,10 +14,12 @@ const PARAMETERS = {
     'NUMBER_TOP': '-N',
     'PERIOD': '-P'
 };
-const PREFIX = {
+const INDEX = {
     ARGUMENT: '-',
-    TF: 'tf-',
-    TF_IDF: 'tfIdf-'
+    OCCURRENCIES: 'occurrencies',
+    TF: 'tf',
+    TF_IDF: 'tfIdf',
+    TOTAL_WORDS: 'totalWords'
 }
 const FILE_ENCODING = 'utf8';
 const REGEX_EXP_TO_CLEAN_WORDS = new RegExp(/(\r\n|\n|\r|\,|\.|\;|\:|\ |\(|\)|\{|\})/gm);
@@ -34,17 +28,14 @@ const REGEX_FLAGS = {
     GLOBAL: 'g',
     MULTIPLE_LINES: 'm'
 };
-const TOTAL_WORDS = 'totalWords';
 const SLASH = '/';
 
 module.exports = {
     DEFAULT_VALUES,
     FILE_ENCODING,
+    INDEX,
     PARAMETERS,
-    PREFIX,
     REGEX_EXP_TO_CLEAN_WORDS,
     REGEX_FLAGS,
-    SEARCH_ONLY_EXACT_WORD,
-    SLASH,
-    TOTAL_WORDS
+    SLASH
 };
