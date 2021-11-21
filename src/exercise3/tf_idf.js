@@ -9,34 +9,35 @@ const {
 } = require('./constants.js');
 const {processArgs} = require('./process_args.js');
 
-// Get term ocurrencies
-function getTermOccurrenciesFromFiles(directory, terms) {
-    var occurrencies = new Map();
-
-    // Read file names in directory
+// Read file names in directory
+function getFiles(directory) {
     const files = fs.readdirSync(directory);
     const numberOfFiles = files.length;
     
-    if (files) {
-        files.forEach(file => {
-            var occurrenciesPerFile = new Map();
+    return {files, numberOfFiles};
+};
 
-            // Read file content
-            const data = fs.readFileSync(directory + SLASH + file, FILE_ENCODING);
+// Get term ocurrencies
+function getTermOccurrenciesFromFiles(directory, terms, files) {
+    var occurrencies = new Map();
+    files.forEach(file => {
+        var occurrenciesPerFile = new Map();
 
-            // Set total number of words
-            occurrenciesPerFile.set(INDEX.TOTAL_WORDS, data.replace(REGEX_EXP_TO_CLEAN_WORDS, ' ').split(' ').length);
+        // Read file content
+        const data = fs.readFileSync(directory + SLASH + file, FILE_ENCODING);
 
-            // Set occurrencies of term in the current file
-            // Calculate and set TF (Term Frequency)
-            occurrenciesPerFile.set(INDEX.OCCURRENCIES, getOccurreciesInContent(terms, data));
-            occurrenciesPerFile.set(INDEX.TF, occurrenciesPerFile.get(INDEX.OCCURRENCIES)/occurrenciesPerFile.get(INDEX.TOTAL_WORDS));
+        // Set total number of words
+        occurrenciesPerFile.set(INDEX.TOTAL_WORDS, data.replace(REGEX_EXP_TO_CLEAN_WORDS, ' ').split(' ').length);
 
-            occurrencies.set(file, occurrenciesPerFile);
-        });
-    }
+        // Set occurrencies of term in the current file
+        // Calculate and set TF (Term Frequency)
+        occurrenciesPerFile.set(INDEX.OCCURRENCIES, getOccurreciesInContent(terms, data));
+        occurrenciesPerFile.set(INDEX.TF, occurrenciesPerFile.get(INDEX.OCCURRENCIES)/occurrenciesPerFile.get(INDEX.TOTAL_WORDS));
 
-    return {numberOfFiles, occurrencies};
+        occurrencies.set(file, occurrenciesPerFile);
+    });
+
+    return occurrencies;
 }
 
 // Get number of occurrencies of terms in the content 
@@ -107,23 +108,29 @@ flow(d, t, n, p);
 setInterval(flow, p, d, t, n, p);
 
 function flow(d, t, n, p) {
-    // 1. Read directory files and get the number of occurrencies of each term in all the files of the directory
-    const {numberOfFiles, occurrencies} = getTermOccurrenciesFromFiles(d, t);
+    // 1. Get filenames and number of files
+    const {files, numberOfFiles} = getFiles(d);
 
-    // 2. Calculate idf
-    const tfIdf = calculateTfIdf(occurrencies, numberOfFiles);
+    if (files) {
+        // 2. Read directory files and get the number of occurrencies of each term in all the files of the directory
+        const occurrencies = getTermOccurrenciesFromFiles(d, t, files);
 
-    // 3. Add TfIdf to occurrencies Map
-    addTfIdf(occurrencies, tfIdf);
+        // 3. Calculate tfIdf
+        const tfIdf = calculateTfIdf(occurrencies, numberOfFiles);
 
-    // 3. Print results
-    printResult(occurrencies, n, counter*p/1000);
+        // 4. Add TfIdf to occurrencies Map
+        addTfIdf(occurrencies, tfIdf);
 
-    // 4. Update the counter
-    counter++;
+        // 5. Print results
+        printResult(occurrencies, n, counter*p/1000);
+
+        // 6. Update the counter
+        counter++;
+    }
 }
 
 module.exports = {
+    getFiles,
     getTermOccurrenciesFromFiles,
     getOccurreciesInContent,
     calculateTfIdf,

@@ -1,23 +1,23 @@
-jest.mock('fs');
 jest.useFakeTimers();
 jest.spyOn(global, 'setInterval');
 
-const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {});
+jest.mock('fs');
+jest.spyOn(process, 'exit').mockImplementation(() => {});
 const {
-    getTermOccurrenciesFromFiles,
+    getFiles,
     getOccurreciesInContent,
     calculateTfIdf,
     getFilesWithTerms,
     addTfIdf
 } = require('../tf_idf.js');
 const {INDEX} = require('../constants.js');
-const { beforeAll } = require('@jest/globals');
 
 const FAKE_FILE_CONTENT_SHORT = 'this is a hello world sentence.';
 const FAKE_FILE_CONTENT_LONG = 'this is a hello world sentence. And this is a hello';
 
 describe('tf_idf', () => {
     const occurrencies = new Map();
+    const directory = 'documents';
     const numberOfFiles = 3;
 
     beforeEach(() => {
