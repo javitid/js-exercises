@@ -42,6 +42,10 @@ function processArgs(args) {
     n = (n === '') ? DEFAULT_VALUES.NUMBERS_TOP : n;
     p = (p === '') ? DEFAULT_VALUES.PERIOD : p;
 
+    // Set n and p as int values
+    n = parseInt(n);
+    p = parseInt(p);
+
     // Validations
     if (typeof(n) != 'number') {
         console.log('Number of top elements "n" should be a number.');
@@ -56,10 +60,6 @@ function processArgs(args) {
         console.log('Example of execution: ./td-idf.js -d dir -n 5 -p 1000 -t "term1 term2 ..."');
         process.exit();
     }
-
-    // Set n and p as int values
-    n = parseInt(n);
-    p = parseInt(p);
 
     return {d, t, n, p};
 }
