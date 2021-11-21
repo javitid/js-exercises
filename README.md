@@ -12,6 +12,7 @@ Exercise 2 - K-complementary:
 
 Exercise 3:
     - processArgs -> O(n)
+    - getFiles -> O(1)
     - getTermOccurrenciesFromFiles -> O(n)
     - getOccurreciesInContent -> O(n)
     - calculateTfIdf -> O(n)

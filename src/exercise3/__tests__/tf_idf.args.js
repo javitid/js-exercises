@@ -4,7 +4,6 @@ jest.spyOn(global, 'setInterval');
 jest.mock('fs');
 jest.spyOn(process, 'exit').mockImplementation(() => {});
 const {
-    getFiles,
     getOccurreciesInContent,
     calculateTfIdf,
     getFilesWithTerms,
