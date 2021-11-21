@@ -3,6 +3,7 @@ const fs = require('fs');
 const {
     FILE_ENCODING,
     PREFIX,
+    REGEX_EXP_TO_CLEAN_WORDS,
     REGEX_FLAGS,
     SEARCH_ONLY_EXACT_WORD,
     SLASH,
@@ -25,7 +26,7 @@ function getTermOccurrenciesFromFiles(directory, terms) {
             const data = fs.readFileSync(directory + SLASH + file, FILE_ENCODING);
 
             // Set total number of words
-            occurrenciesPerFile.set(TOTAL_WORDS, data.split(' ').length);
+            occurrenciesPerFile.set(TOTAL_WORDS, data.replace(REGEX_EXP_TO_CLEAN_WORDS, ' ').split(' ').length);
 
             // Set occurrencies of each term in the current file
             // Calculate and sert TF (Term Frequency)
@@ -43,9 +44,13 @@ function getTermOccurrenciesFromFiles(directory, terms) {
 
 function getOccurreciesInContent(term, content) {
     if (SEARCH_ONLY_EXACT_WORD) {
-        return content.split(' ').filter((value) => value === term).length;
+        return content
+        .replace(REGEX_EXP_TO_CLEAN_WORDS, ' ')
+        .split(' ')
+        .filter((value) => value === term)
+        .length;
     } else {
-        const pattern = new RegExp(`${term}`, [REGEX_FLAGS.GLOBAL + REGEX_FLAGS.CASE_INSENSITIVE]);
+        const pattern = new RegExp(`${term}`, [REGEX_FLAGS.GLOBAL + REGEX_FLAGS.CASE_INSENSITIVE + REGEX_FLAGS.MULTIPLE_LINES]);
         return (content.match(pattern) || []).length;
     }
 }
@@ -62,7 +67,9 @@ function calculateTfIdf(occurrencies, terms, numberOfFiles) {
             // Calculate IDF (Inverse Document Frequency) for each term
             tfIdf.set(
                 document + PREFIX.ARGUMENT + term,
-                (occurrencies.get(document).get(PREFIX.TF + term) * Math.log10(numberOfFiles/filesWithTerm[term])).toFixed(2)
+                (filesWithTerm[term] != 0) ?
+                (occurrencies.get(document).get(PREFIX.TF + term) * Math.log(numberOfFiles/filesWithTerm[term])).toFixed(2):
+                Number(0).toFixed(2)
             );
         }
     }
