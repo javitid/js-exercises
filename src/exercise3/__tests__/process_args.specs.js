@@ -1,5 +1,5 @@
 const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {});
-const {processArgs} = require('../process_args');
+const {processArgs} = require('../process_args.js');
 const {DEFAULT_VALUES} = require('../constants.js');
 
 describe('processArgs', () => {

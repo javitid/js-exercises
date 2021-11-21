@@ -122,3 +122,11 @@ function flow(d, t, n, p) {
     // 4. Update the counter
     counter++;
 }
+
+module.exports = {
+    getTermOccurrenciesFromFiles,
+    getOccurreciesInContent,
+    calculateTfIdf,
+    getFilesWithTerms,
+    addTfIdf
+};
