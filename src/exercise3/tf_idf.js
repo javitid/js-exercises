@@ -104,16 +104,23 @@ const {d, t, n, p} = processArgs();
 
 // ** INIT FLOW **
 var counter = 0;
+var initialNumberOfFiles = 0;
+var filesAlreadyAnalised = [];
+var occurrencies = new Map();
 flow(d, t, n, p);
 setInterval(flow, p, d, t, n, p);
 
 function flow(d, t, n, p) {
-    // 1. Get filenames and number of files
-    const {files, numberOfFiles} = getFiles(d);
+    // 1a. Get filenames and number of files
+    var {files, numberOfFiles} = getFiles(d);
 
-    if (files) {
+    // 1b. Remove file names already analised from the list
+    files  = files.filter(a => !filesAlreadyAnalised.includes(a))
+
+    // Since the files only can be added but no removed nor overwritten
+    if (numberOfFiles > initialNumberOfFiles) {
         // 2. Read directory files and get the number of occurrencies of each term in all the files of the directory
-        const occurrencies = getTermOccurrenciesFromFiles(d, t, files);
+        occurrencies = new Map([...occurrencies, ...getTermOccurrenciesFromFiles(d, t, files)]);
 
         // 3. Calculate tfIdf
         const tfIdf = calculateTfIdf(occurrencies, numberOfFiles);
@@ -121,12 +128,16 @@ function flow(d, t, n, p) {
         // 4. Add TfIdf to occurrencies Map
         addTfIdf(occurrencies, tfIdf);
 
-        // 5. Print results
-        printResult(occurrencies, n, counter*p/1000);
-
-        // 6. Update the counter
-        counter++;
+        // 5. Save current number of files and filenames already analised
+        initialNumberOfFiles = numberOfFiles;
+        filesAlreadyAnalised = [...filesAlreadyAnalised, ...files];
     }
+
+    // 5. Print results
+    printResult(occurrencies, n, counter*p/1000);
+
+    // 6. Update the counter
+    counter++;
 }
 
 module.exports = {
