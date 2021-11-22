@@ -23,25 +23,26 @@ Exercise 3:
     Notes:
         - tf_idf.js is the main file and it should have permission to execution: `chmod +x tf.idf.js`
         - Example of execution: `./td_idf.js -d dir -n 5 -p 1000 -t "term1 term2 ..."`
+        - Total tf-idf for several terms is the sum of individual tf-idf for each term divided by the number of terms
 
 
 COVERAGE
---------------------|---------|----------|---------|---------|-------------------
-File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
---------------------|---------|----------|---------|---------|-------------------
-All files           |    91.5 |    90.32 |   83.33 |   90.81 |                   
- exercise1          |     100 |      100 |     100 |     100 |                   
-  palindrome.js     |     100 |      100 |     100 |     100 |                   
- exercise2          |     100 |      100 |     100 |     100 |                   
-  kcomplementary.js |     100 |      100 |     100 |     100 |                   
- exercise3          |   89.53 |    88.88 |      80 |   88.88 |                   
-  constants.js      |     100 |      100 |     100 |     100 |                   
-  process_args.js   |     100 |      100 |     100 |     100 |                   
-  tf_idf.js         |   79.54 |       50 |      75 |   79.06 | 24-37,88-93,97    
---------------------|---------|----------|---------|---------|-------------------
+--------------------|---------|----------|---------|---------|---------------------------
+File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s         
+--------------------|---------|----------|---------|---------|---------------------------
+All files           |   83.73 |    90.32 |   73.68 |   83.33 |                           
+ exercise1          |     100 |      100 |     100 |     100 |                           
+  palindrome.js     |     100 |      100 |     100 |     100 |                           
+ exercise2          |     100 |      100 |     100 |     100 |                           
+  kcomplementary.js |     100 |      100 |     100 |     100 |                           
+ exercise3          |   80.58 |    88.88 |   68.75 |   80.41 |                           
+  constants.js      |     100 |      100 |     100 |     100 |                           
+  process_args.js   |     100 |      100 |     100 |     100 |                           
+  tf_idf.js         |   67.21 |       50 |   61.53 |   67.79 | 22-41,100-105,109,135-146 
+--------------------|---------|----------|---------|---------|---------------------------
 
 Test Suites: 4 passed, 4 total
 Tests:       26 passed, 26 total
 Snapshots:   0 total
-Time:        1.011 s
+Time:        0.955 s, estimated 1 s
 Ran all test suites.

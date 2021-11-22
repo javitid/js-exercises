@@ -22,7 +22,7 @@ function processArgs(args) {
                     d = next;
                     break;
                 case PARAMETERS.TERMS:
-                    t = next;
+                    t = next.split(' ');
                     break;
                 case PARAMETERS.NUMBER_TOP:
                     n = parseInt(next);

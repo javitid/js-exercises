@@ -25,14 +25,29 @@ describe('tf_idf', () => {
         const document3 = new Map();
 
         document1.set(INDEX.TOTAL_WORDS, 38);
-        document1.set(INDEX.OCCURRENCIES, 16);
-        document1.set(INDEX.TF, 0.42105263157894735);
+        document1.set(INDEX.OCCURRENCIES + '-term1', 16);
+        document1.set(INDEX.OCCURRENCIES + '-term2', 1);
+        document1.set(INDEX.TF + '-term1', 0.21);
+        document1.set(INDEX.TF + '-term2', 0.12);
+        document1.set(INDEX.TF_IDF + '-term1', 0.10);
+        document1.set(INDEX.TF_IDF + '-term2', 0.05);
+        document1.set(INDEX.TF_IDF, 0.15);
         document2.set(INDEX.TOTAL_WORDS, 38);
-        document2.set(INDEX.OCCURRENCIES, 1);
-        document2.set(INDEX.TF, 0.058823529411764705);
+        document2.set(INDEX.OCCURRENCIES + '-term1', 1);
+        document2.set(INDEX.OCCURRENCIES + '-term2', 1)
+        document2.set(INDEX.TF + '-term1', 0.42);
+        document2.set(INDEX.TF + '-term2', 0.23);
+        document2.set(INDEX.TF_IDF + '-term1', 0.05);
+        document2.set(INDEX.TF_IDF + '-term2', 0);
+        document2.set(INDEX.TF_IDF, 0.05);
         document3.set(INDEX.TOTAL_WORDS, 12);
-        document3.set(INDEX.OCCURRENCIES, 0);
-        document3.set(INDEX.TF, 0);
+        document3.set(INDEX.OCCURRENCIES + '-term1', 0);
+        document3.set(INDEX.OCCURRENCIES + '-term2', 0);
+        document3.set(INDEX.TF + '-term1', 0);
+        document3.set(INDEX.TF + '-term2', 0);
+        document3.set(INDEX.TF_IDF + '-term1', 0);
+        document3.set(INDEX.TF_IDF + '-term2', 0);
+        document3.set(INDEX.TF_IDF, 0);
 
         occurrencies.set('document1.txt', document1);
         occurrencies.set('document2.txt', document2);
@@ -58,34 +73,70 @@ describe('tf_idf', () => {
 
     describe('calculateTfIdf', () => {
         it('should set tfIdf Map from occurrencies and numberOfFiles ', () => {
+            const terms = ['term1', 'term2'];
+            const expectedTfIdfPerFile1 = new Map();
+            const expectedTfIdfPerFile2 = new Map();
+            const expectedTfIdfPerFile3 = new Map();
             const expectedTfIdf = new Map();
-            expectedTfIdf.set('document1.txt', 0.17);
-            expectedTfIdf.set('document2.txt', 0.02);
-            expectedTfIdf.set('document3.txt', 0);
 
-            const tfIdf = calculateTfIdf(occurrencies, numberOfFiles);
+            expectedTfIdfPerFile1.set('term1', 0.09);
+            expectedTfIdfPerFile1.set('term2', 0.05);
+            expectedTfIdfPerFile1.set(INDEX.TF_IDF, 0.07);
+            expectedTfIdfPerFile2.set('term1', 0.17);
+            expectedTfIdfPerFile2.set('term2', 0.09);
+            expectedTfIdfPerFile2.set(INDEX.TF_IDF, 0.13);
+            expectedTfIdfPerFile3.set('term1', 0);
+            expectedTfIdfPerFile3.set('term2', 0);
+            expectedTfIdfPerFile3.set(INDEX.TF_IDF, 0.00);
+            
+            expectedTfIdf.set('document1.txt', expectedTfIdfPerFile1);
+            expectedTfIdf.set('document2.txt', expectedTfIdfPerFile2);
+            expectedTfIdf.set('document3.txt', expectedTfIdfPerFile3);
+
+            const tfIdf = calculateTfIdf(occurrencies, numberOfFiles, terms);
             expect(tfIdf).toEqual(expectedTfIdf);
         });
     });
 
     describe('getFilesWithTerms', () => {
         it('should get the number of files with terms content', () => {
-            const filesWithTerms = getFilesWithTerms(occurrencies);
+            const filesWithTerms = getFilesWithTerms(occurrencies, 'term1');
             expect(filesWithTerms).toBe(2);
         });
     });
 
     describe('addTfIdf', () => {
         it('should add TfIdf to occurrencies Map', () => {
+            const terms = ['term1', 'term2'];
             const tfIdf = new Map();
-            tfIdf.set('document1.txt', 0.17);
-            tfIdf.set('document2.txt', 0.02);
-            tfIdf.set('document3.txt', 0);
+            const tfIdfPerFile1 = new Map();
+            const tfIdfPerFile2 = new Map();
+            const tfIdfPerFile3 = new Map();
 
-            addTfIdf(occurrencies, tfIdf);
-            expect(occurrencies.get('document1.txt').get(INDEX.TF_IDF)).toBe(0.17);
-            expect(occurrencies.get('document2.txt').get(INDEX.TF_IDF)).toBe(0.02);
+            tfIdfPerFile1.set('term1', 0.09);
+            tfIdfPerFile1.set('term2', 0.05);
+            tfIdfPerFile1.set(INDEX.TF_IDF, 0.07);
+            tfIdfPerFile2.set('term1', 0.17);
+            tfIdfPerFile2.set('term2', 0.09);
+            tfIdfPerFile2.set(INDEX.TF_IDF, 0.13);
+            tfIdfPerFile3.set('term1', 0);
+            tfIdfPerFile3.set('term2', 0);
+            tfIdfPerFile3.set(INDEX.TF_IDF, 0.00);
+            
+            tfIdf.set('document1.txt', tfIdfPerFile1);
+            tfIdf.set('document2.txt', tfIdfPerFile2);
+            tfIdf.set('document3.txt', tfIdfPerFile3);
+
+            addTfIdf(occurrencies, tfIdf, terms);
+            expect(occurrencies.get('document1.txt').get(INDEX.TF_IDF)).toBe(0.07);
+            expect(occurrencies.get('document1.txt').get(INDEX.TF_IDF + '-term1')).toBe(0.09);
+            expect(occurrencies.get('document1.txt').get(INDEX.TF_IDF + '-term2')).toBe(0.05);
+            expect(occurrencies.get('document2.txt').get(INDEX.TF_IDF)).toBe(0.13);
+            expect(occurrencies.get('document2.txt').get(INDEX.TF_IDF + '-term1')).toBe(0.17);
+            expect(occurrencies.get('document2.txt').get(INDEX.TF_IDF + '-term2')).toBe(0.09);
             expect(occurrencies.get('document3.txt').get(INDEX.TF_IDF)).toBe(0);
+            expect(occurrencies.get('document3.txt').get(INDEX.TF_IDF + '-term1')).toBe(0);
+            expect(occurrencies.get('document3.txt').get(INDEX.TF_IDF + '-term2')).toBe(0);
         });
     });
 });

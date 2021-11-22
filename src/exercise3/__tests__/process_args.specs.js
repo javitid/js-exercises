@@ -26,30 +26,30 @@ describe('processArgs', () => {
         });
 
         it('terms t', () => {
-            const args = '-t "term1"';
+            const args = '-t "term1 term2"';
 
-            const {t} = processArgs(args.split(' '));
-            expect(t).toBe('"term1"');
+            const {t} = processArgs(['-t', 'term1 term2']);
+            expect(t).toEqual(['term1', 'term2']);
         });
 
         it('several terms in the same line', () => {
-            const args = '-d directory -p 1000 -n 3 -t "term1"';
+            const args = ['-d', 'directory', '-p', 1000, '-n', 3, '-t', 'term1'];
 
-            const {d, t, n, p} = processArgs(args.split(' '));
+            const {d, t, n, p} = processArgs(args);
             expect(d).toBe('directory');
             expect(p).toBe(1000);
             expect(n).toBe(3);
-            expect(t).toBe('"term1"');
+            expect(t).toEqual(['term1']);
         });
 
         it('and support capitol letters', () => {
-            const args = '-D directory -P 1000 -N 3 -T "term1"';
+            const args = ['-D', 'directory', '-P', 1000, '-N', 3, '-T', 'term1'];
 
-            const {d, t, n, p} = processArgs(args.split(' '));
+            const {d, t, n, p} = processArgs(args);
             expect(d).toBe('directory');
             expect(p).toBe(1000);
             expect(n).toBe(3);
-            expect(t).toBe('"term1"');
+            expect(t).toEqual(['term1']);
         });
     });
 
