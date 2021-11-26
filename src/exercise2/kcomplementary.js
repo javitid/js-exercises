@@ -15,4 +15,20 @@ function findKComplementary(A, K) {
     return {K, kcomplementaries};
 }
 
-module.exports = findKComplementary;
+// A: array of integers
+// K: number to find the complementaries
+// It creates a Map with values found as key, and value an array with the indexes where there are these values
+function findKComplementaryBestEfficience(A, K) {
+    let mapPositions = new Map();
+    for (let i=0; i<A.length; i++) {
+        if (mapPositions.has(A[i])) {
+            mapPositions.get(A[i]).push(i);
+        } else {
+            mapPositions.set(A[i], [i]);
+        }
+    }
+
+    return mapPositions;
+}
+
+module.exports = {findKComplementary, findKComplementaryBestEfficience};

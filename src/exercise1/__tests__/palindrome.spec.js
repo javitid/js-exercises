@@ -1,4 +1,4 @@
-const {isPalindrome, isPalindromeEfficient} = require('../palindrome');
+const {isPalindrome, isPalindromeEfficient, isPalindromeBestEfficience} = require('../palindrome');
 
 describe('isPalindrome', () => {
     it('should returns false when the word is not a palindrome', () => {
@@ -36,6 +36,26 @@ describe('isPalindromeEfficient', () => {
 
         it('and there are spaces and/or capitols', () => {
             expect(isPalindromeEfficient('Dabale arroz a la zorra el abad')).toBe(true);
+        });
+    });
+});
+
+describe('isPalindromeBestEfficience', () => {
+    it('should returns false when the word is not a palindrome', () => {
+        expect(isPalindromeBestEfficience('abc')).toBe(false);
+    });
+
+    describe('should returns true when the word is a palindrome', () => {
+        it('and there is an odd number of chars', () => {
+            expect(isPalindromeBestEfficience('palindromemordnilap')).toBe(true);
+        });
+
+        it('and there is an even number of chars', () => {
+            expect(isPalindromeBestEfficience('arra')).toBe(true);
+        });
+
+        it('and there are spaces and/or capitols', () => {
+            expect(isPalindromeBestEfficience('Dabale arroz a la zorra el abad')).toBe(true);
         });
     });
 });
